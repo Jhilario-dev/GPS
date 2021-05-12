@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btn_newWaypoint, btn_showWayPointList,  btn_showMap;
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch sw_locationupdates, sw_gps;
 
     boolean updateOn = false;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     FusedLocationProviderClient fusedLocationProviderClient;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);
 
-        locationRequest.setPriority(locationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
 
         locationCallback = new LocationCallback() {
@@ -99,58 +101,43 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        btn_newWaypoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btn_newWaypoint.setOnClickListener(v -> {
 
-                Myapplication myapplication = (Myapplication)getApplicationContext();
-                savedLocations = myapplication.getMyLocations();
-                savedLocations.add(currentLocation);
+            Myapplication myapplication = (Myapplication)getApplicationContext();
+            savedLocations = myapplication.getMyLocations();
+            savedLocations.add(currentLocation);
 
-            }
         });
 
-        btn_showWayPointList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ShowSavedLocationList.class);
-                startActivity(intent);
-            }
+        btn_showWayPointList.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ShowSavedLocationList.class);
+            startActivity(intent);
         });
 
-        btn_showMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(intent);
-            }
+        btn_showMap.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
         });
 
 
 
 
-        sw_gps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sw_gps.isChecked()) {
-                    locationRequest.setPriority(locationRequest.PRIORITY_HIGH_ACCURACY);
-                    tv_sensor.setText("Using GPS sensor");
-                } else {
-                    locationRequest.setPriority(locationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-                    tv_sensor.setText("Using towers + wifi");
-                }
+        sw_gps.setOnClickListener(v -> {
+            if (sw_gps.isChecked()) {
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                tv_sensor.setText("Using GPS sensor");
+            } else {
+                locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                tv_sensor.setText("Using towers + wifi");
             }
         });
 
 
-        sw_locationupdates.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sw_locationupdates.isChecked()) {
-                    startLocationUpdates();
-                } else {
-                    stopLocationUpdates();
-                }
+        sw_locationupdates.setOnClickListener(v -> {
+            if (sw_locationupdates.isChecked()) {
+                startLocationUpdates();
+            } else {
+                stopLocationUpdates();
             }
         });
 
@@ -160,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void stopLocationUpdates() {
         tv_updates.setText("Location is not being tracked");
         tv_lat.setText("Not tracking location");
@@ -173,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
+    @SuppressLint("SetTextI18n")
     private void startLocationUpdates() {
         tv_updates.setText("Location is being tracked");
 
@@ -189,15 +178,14 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
-            case PERMISSION_FINE_LOCATION:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    updateGPS();
-                }else{
-                    Toast.makeText(this, "this app requires permission", Toast.LENGTH_SHORT).show();
-                    finish();
+        if (requestCode == PERMISSION_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                updateGPS();
+            } else {
+                Toast.makeText(this, "this app requires permission", Toast.LENGTH_SHORT).show();
+                finish();
 
-                }
+            }
         }
 
 
@@ -213,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 currentLocation = location;
             });
         }else{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
         }
     }
 

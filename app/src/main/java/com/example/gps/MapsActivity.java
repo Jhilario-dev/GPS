@@ -34,7 +34,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -58,21 +57,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         LatLng lastLocationPlaced = sydney;
         for(Location location: savedLocations){
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-
             MarkerOptions markerOptions = new MarkerOptions();
-
             markerOptions.position(latLng);
             markerOptions.title("lat"+ location.getLatitude() + "Lon" + location.getLongitude());
             mMap.addMarker(markerOptions);
-
             lastLocationPlaced = latLng;
 
         }
@@ -88,12 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     clicks = 0;
 
                 }
-
                 clicks++;
                 marker.setTag(clicks);
-
                 Toast.makeText(MapsActivity.this, "Marker " + marker.getTitle()+" was clicked "+ marker.getTag() + " times", Toast.LENGTH_SHORT).show();
-
                 return false;
             }
         });
