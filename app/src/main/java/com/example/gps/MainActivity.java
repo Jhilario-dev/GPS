@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_FINE_LOCATION = 99;
     TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor, tv_updates, tv_address, tv_wayPointCounts;
 
-    Button btn_newWaypoint, btn_showWayPointList;
+    Button btn_newWaypoint, btn_showWayPointList,  btn_showMap;
 
     Switch sw_locationupdates, sw_gps;
 
@@ -73,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         sw_gps = findViewById(R.id.sw_gps);
 
         btn_newWaypoint = findViewById(R.id.btn_newWayPoint);
-        btn_showWayPointList = findViewById(R.id.btn_newWayPoint);
+        btn_showWayPointList = findViewById(R.id.btn_showWayPoint);
+        btn_showMap = findViewById(R.id.btn_showMap);
 
 
         locationRequest = new LocationRequest();
@@ -107,6 +109,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        btn_showWayPointList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ShowSavedLocationList.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_showMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
         sw_gps.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         Geocoder geocoder = new Geocoder(MainActivity.this);
 
         try {
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLatitude(), 1 );
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(), 1 );
             tv_address.setText(addresses.get(0).getAddressLine(0));
 
 
